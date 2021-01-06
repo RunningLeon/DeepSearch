@@ -88,7 +88,7 @@ def main(args):
 def parse_arguments(argv):
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', '--input', type=str, required=True, 
-        help='Input directory that has image files.')
+        help='Input directory that has pkl files.')
     parser.add_argument('-o', '--output', type=str, default=None, 
         help='Output directory to save results')
     parser.add_argument('-d', '--debug', action='store_true',

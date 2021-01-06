@@ -68,3 +68,27 @@ Apart from these files, there are two subdirectories in each of these directorie
 
 ## Examples
 This folder contains 4 folders for the Defended and Undefended versions of CIFAR10 and SVHNC, each of which contains 10 examples(1 from each class) of images attacked by our method.  
+
+## Process results
+
+Use minicona to create python environment
+
+```bash
+conda create -n deepsearch python==3.7.0
+pip install -r requirements.txt
+source activate deepsearch
+```
+
+usage for imagenet
+
+```python
+cd ImageNet
+python process_result.py --input result_dir --output save_dir
+```
+
+usage for SVHN and CIFAR
+
+```python
+cd SVHN
+python process_result.py --input result_dir --output save_dir --model undef
+```

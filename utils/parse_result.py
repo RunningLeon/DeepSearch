@@ -59,6 +59,27 @@ def get_images_from_pkl(input_dir, batch_size=1, num_image=1000):
     return ret
 
 
+def get_images_from_pkl_V2(input_dir, target_set, batch_size=1, num_image=1000):
+    data_li = []
+    if batch_size == 1:
+        pbar = tqdm(target_set, desc='Reading image ')
+    else:
+        pbar = tqdm(range(0, num_image, batch_size), desc='Reading image ')
+    for i in pbar:
+        if batch_size == 1:
+            filename = f'image_{i}.pkl'
+        else:
+            filename = f'image_{i}_to_{i+batch_size-1}.pkl'
+        pkl_path = os.path.join(input_dir, filename)
+        if not os.path.exists(pkl_path):
+            print(f'File not exists:{pkl_path}')
+            continue
+        data = load_data_from_pkl(pkl_path)
+        data_li.append(data)
+    ret = np.vstack(data_li)
+    return ret
+
+
 def parse_result_from_pkl(pkl_path):
     """
     从 data.pkl 文件中解析出攻击成功, 成功率, 查询次数等信息

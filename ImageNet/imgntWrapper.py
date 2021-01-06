@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from torchvision.models import inception_v3
+from torchvision.models import inception_v3, resnext50_32x4d
 from torchvision import transforms
 from PIL import Image
 import torch
@@ -22,18 +22,27 @@ INDICES=""
 normalize = lambda x:(x-np.array([0.485, 0.456, 0.406]))/np.array([0.229, 0.224, 0.225])
 class CompatModel:
     def __init__(self):
-        self.model=inception_v3(pretrained=True)
-        self.model.cuda()
+        # change this to different model
+        # self.model=inception_v3(pretrained=True)
+        self.model = resnext50_32x4d(pretrained=True)
+        self.has_cuda = torch.cuda.is_available()
+        ## support cuda or cpu
+        if self.has_cuda:
+            self.model.cuda()
         self.model.eval()
         self.calls=0
     def predict(self,images):
         self.calls+=images.shape[0]
         with torch.no_grad():
-            t_images=torch.tensor(normalize(images),dtype=torch.float).cuda()
+            t_images=torch.tensor(normalize(images),dtype=torch.float)
+            if self.has_cuda:
+                t_images = t_images.cuda()
             t_images=t_images.permute(0,3,1,2)
             res=self.model(t_images)
             res=torch.nn.functional.softmax(res,dim=1)
-        return res.cpu().detach().numpy()
+            if torch.cuda.is_available():
+                res = res.cpu()
+        return res.detach().numpy()
 mymodel=CompatModel()
 
 def load_image(id):

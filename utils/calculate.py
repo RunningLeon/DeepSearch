@@ -16,7 +16,9 @@ def cal_avg_distance(adv_images, gt_images, attack_success_li):
     k = 0
     s_inf = 0
     s_l2 = 0
-    for i, success in enumerate(attack_success_li):
+    min_num = min(len(adv_images), len(attack_success_li))
+    for i in range(min_num):
+        success = attack_success_li[i]
         if not success:
             continue
         k += 1
